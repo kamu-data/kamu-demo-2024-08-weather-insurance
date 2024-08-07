@@ -1,0 +1,27 @@
+{
+  "name": "weather-insurance-contract",
+  "description": "A sample contract using the ODF oracle to access weather data",
+  "version": "0.0.1",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@opendatafabric/contracts": "^0.1.6"
+  },
+  "devDependencies": {
+    "forge-std": "github:foundry-rs/forge-std#v1.8.1"
+  },
+  "config": {
+    "script-shell": "/bin/bash"
+  },
+  "scripts": {
+    "clean": "rm -rf cache out",
+    "build": "forge build",
+    "test": "forge test",
+    "test:coverage": "forge coverage",
+    "test:coverage:report": "forge coverage --report lcov && genhtml lcov.info --branch-coverage --output-dir coverage",
+    "deploy": "source ./.env && forge script script/Deploy.s.sol -vvvv --rpc-url $RPC_URL --private-key $ADMIN_PRIVATE_KEY --broadcast --verify",
+    "applyForCoverage": "source ./.env && cast send --rpc-url $RPC_URL --from $HOLDER_ADDRESS --private-key $HOLDER_PRIVATE_KEY --value \"$APPLY_VALUE\" $BROKER_CONTRACT_ADDR 'applyForCoverage(uint64 precipitationThreshold, string datasetId) returns(uint64)' \"$APPLY_PRECIPITATION_THRESHOLD\" \"$APPLY_DATASET_ID\"",
+    "bidForCoverage": "source ./.env && cast send --rpc-url $RPC_URL --from $INSURER_ADDRESS --private-key $INSURER_PRIVATE_KEY --value \"$BID_VALUE\" $BROKER_CONTRACT_ADDR 'bidForCoverage(uint64 policyId)' \"$POLICY_ID\"",
+    "settle": "source ./.env && cast send --rpc-url $RPC_URL --from $ADMIN_ADDRESS --private-key $ADMIN_PRIVATE_KEY $BROKER_CONTRACT_ADDR 'settle(uint64 policyId)' \"$POLICY_ID\"",
+    "withdraw": "source ./.env && cast send --rpc-url $RPC_URL --from $ADMIN_ADDRESS --private-key $ADMIN_PRIVATE_KEY $BROKER_CONTRACT_ADDR 'withdraw()'"
+  }
+}

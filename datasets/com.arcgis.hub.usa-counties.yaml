@@ -1,0 +1,19 @@
+---
+kind: DatasetSnapshot
+version: 1
+content:
+  name: com.arcgis.hub.usa-counties
+  kind: Root
+  metadata:
+    - kind: SetPollingSource
+      fetch:
+        kind: Url
+        # Sourced from the GeoJson download link from this page:
+        # https://hub.arcgis.com/datasets/fws::usa-counties/about
+        url: https://opendata.arcgis.com/api/v3/datasets/06308cdd01c8409ea1869be76c934030_0/downloads/data?format=geojson&spatialRefId=4326&where=1%3D1
+      read:
+        kind: GeoJson
+      merge:
+        kind: Snapshot
+        primaryKey:
+          - '"FIPS"'

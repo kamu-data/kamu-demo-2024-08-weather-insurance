@@ -1,0 +1,47 @@
+---
+kind: DatasetSnapshot
+version: 1
+content:
+  name: broker-contract.coverage-application
+  kind: Root
+  metadata:
+    - kind: SetPollingSource
+      fetch:
+        kind: EthereumLogs
+        chainId: 11155111 # Ethereum Sepolia Testnet
+        signature: |
+          event CoverageApplication(
+            uint64 indexed policyId,
+            address indexed holder,
+            uint holderDeposit
+          )
+        # Using contract deployment block to limit scanning
+        filter: |
+          address = X'f52bc7be133a4cb3799bfe6399bc576465f28153'
+          and
+          block_number >= 6432751
+      read:
+        kind: Parquet
+      preprocess:
+        kind: Sql
+        engine: datafusion
+        # Note many providers don't yet return `blockTimestamp` from `eth_getLogs`
+        # so we fallback to the time contained within the event
+        # See: https://github.com/ethereum/execution-apis/issues/295
+        query: |
+          select
+            -- coalesce(
+            --   block_timestamp,
+            --   to_timestamp_seconds(cast(event.time as bigint))
+            -- ) as event_time,
+            block_number,
+            block_hash,
+            transaction_index,
+            transaction_hash,
+            log_index,
+            event."policyId" as policy_id,
+            event.holder as holder,
+            cast(event."holderDeposit" as double) / pow(10.0, 18) as holder_deposit
+          from input
+      merge:
+        kind: Append

@@ -1,0 +1,36 @@
+---
+kind: DatasetSnapshot
+version: 1
+content:
+  name: weather-stations-global
+  kind: Derivative
+  metadata:
+    - kind: SetTransform
+      # Declaring inputs
+      inputs:
+        - datasetRef: weather-station-001
+        - datasetRef: weather-station-002
+      # Defining transformation
+      transform:
+        kind: Sql
+        # Using Apache DataFusion engine
+        engine: datafusion
+        # Note the use order by to ensure determinism
+        query: |
+          select * from (
+            select
+              event_time,
+              '001' as device_id,
+              lat,
+              lon,
+              precipitation_accumulated
+            from 'weather-station-001'
+            union all
+            select
+              event_time,
+              '002' as device_id,
+              lat,
+              lon,
+              precipitation_accumulated
+            from 'weather-station-002'
+          ) order by event_time, device_id

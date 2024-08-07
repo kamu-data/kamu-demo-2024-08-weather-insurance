@@ -1,0 +1,23 @@
+---
+kind: DatasetSnapshot
+version: 1
+content:
+  # Name of the dataset (local)
+  name: weather-station-001
+  # Root datasets store raw / source data
+  kind: Root
+  metadata:
+    # Allows us to send/write data
+    - kind: AddPushSource
+      sourceName: default
+      # Format and schema of the data we expect
+      read:
+        kind: NdJson
+        schema:
+          - event_time TIMESTAMP
+          - lat DOUBLE
+          - lon DOUBLE
+          - precipitation_accumulated DOUBLE
+      # How new data is merged with data already in the dataset
+      merge:
+        kind: Append

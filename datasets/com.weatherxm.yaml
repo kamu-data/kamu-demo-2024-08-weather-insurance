@@ -1,0 +1,41 @@
+---
+kind: DatasetSnapshot
+version: 1
+content:
+  name: com.weatherxm
+  kind: Root
+  metadata:
+    - kind: SetPollingSource
+      fetch:
+        kind: Url
+        # Sourced from: https://index.weatherxm.com/
+        url: https://basin.tableland.xyz/events/bafybeid7buvliws4eljrzrvemsi5ptsob7if4sssxvt6y3hw66gtlhv654
+      read:
+        kind: Parquet
+      preprocess:
+        kind: Sql
+        engine: datafusion
+        query: |
+          select
+            cast(utc_datetime as timestamp) as event_time,
+            device_id,
+            temperature,
+            humidity,
+            precipitation_accumulated,
+            wind_speed,
+            wind_gust,
+            wind_direction,
+            illuminance,
+            solar_irradiance,
+            fo_uv,
+            uv_index,
+            precipitation_rate,
+            pressure,
+            name,
+            model,
+            cell_id,
+            lat,
+            lon
+          from input
+      merge:
+        kind: Append
