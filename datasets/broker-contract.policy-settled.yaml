@@ -8,7 +8,9 @@ content:
     - kind: SetPollingSource
       fetch:
         kind: EthereumLogs
-        chainId: 11155111 # Ethereum Sepolia Testnet
+        # Ethereum Sepolia Testnet
+        chainId: 11155111
+        nodeUrl: wss://sepolia.infura.io/ws/v3/441241861f624756a18462c3af944d35
         signature: |
           event PolicySettled(
             uint64 indexed policyId,
