@@ -1,39 +1,51 @@
 import json
 from datetime import datetime, timedelta
+import scipy.stats
 
 devices = [{
     "name": "weather-station-001",
     "lat": 30.30,
     "lon": -97.69,
     "rain": [{
-        "t": datetime.fromisoformat("2024-01-10"),
-        "d": timedelta(hours=24),
-        "mm": 15,
+        "start": datetime.fromisoformat("2024-01-02"),
+        "duration": timedelta(hours=4),
+        "rainfall_mm": 10,
+        "distribution": (2, 5),
     }, {
-        "t": datetime.fromisoformat("2024-01-11"),
-        "d": timedelta(hours=8),
-        "mm": 5,
+        "start": datetime.fromisoformat("2024-01-10"),
+        "duration": timedelta(hours=48),
+        "rainfall_mm": 25,
+        "distribution": (2, 5),
     }, {
-        "t": datetime.fromisoformat("2024-01-20"),
-        "d": timedelta(hours=24),
-        "mm": 20,
+        "start": datetime.fromisoformat("2024-01-12"),
+        "duration": timedelta(hours=8),
+        "rainfall_mm": 10,
+        "distribution": (3, 3),
+    }, {
+        "start": datetime.fromisoformat("2024-01-20"),
+        "duration": timedelta(hours=24),
+        "rainfall_mm": 20,
+        "distribution": (2, 5),
     }]
 }, {
     "name": "weather-station-002",
     "lat": 28.48,
     "lon": -98.34,
     "rain": [{
-        "t": datetime.fromisoformat("2024-01-10"),
-        "d": timedelta(hours=24),
-        "mm": 10,
+        "start": datetime.fromisoformat("2024-01-10"),
+        "duration": timedelta(hours=40),
+        "rainfall_mm": 10,
+        "distribution": (4, 2),
     }, {
-        "t": datetime.fromisoformat("2024-01-11"),
-        "d": timedelta(hours=8),
-        "mm": 7,
+        "start": datetime.fromisoformat("2024-01-12"),
+        "duration": timedelta(hours=8),
+        "rainfall_mm": 7,
+        "distribution": (2, 3),
     }, {
-        "t": datetime.fromisoformat("2024-01-20"),
-        "d": timedelta(hours=24),
-        "mm": 10,
+        "start": datetime.fromisoformat("2024-01-20"),
+        "duration": timedelta(hours=24),
+        "rainfall_mm": 10,
+        "distribution": (3, 2),
     }]
 }]
 
@@ -54,12 +66,15 @@ for device in devices:
         t = start
         while t <= end:
             for r in device["rain"]:
-                relpos = (t - r["t"]).total_seconds() / r["d"].total_seconds()
+                relpos = (t - r["start"]).total_seconds() / r["duration"].total_seconds()
                 if relpos >= 0 and relpos < 1:
-                    precip += float(r["mm"]) / (r["d"].total_seconds() / step.total_seconds())
+                    mm_per_interval = float(r["rainfall_mm"]) / (r["duration"].total_seconds() / step.total_seconds())
+                    alpha, beta = r['distribution']
+                    precip_interval = float(scipy.stats.beta.pdf(relpos, alpha, beta)) * mm_per_interval
+                    precip += precip_interval
             
             v["event_time"] = t.isoformat()
-            v["precipitation_accumulated"] = precip
+            v["precipitation_accumulated"] = round(precip, 3)
             json.dump(v, f)
             f.write('\n')
 
