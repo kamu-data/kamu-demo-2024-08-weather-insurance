@@ -39,3 +39,7 @@ content:
           from input
       merge:
         kind: Append
+    - kind: SetLicense
+      shortName: Custom License
+      name: Custom License
+      websiteUrl: https://weatherxm.network/docs/data-licensing.html

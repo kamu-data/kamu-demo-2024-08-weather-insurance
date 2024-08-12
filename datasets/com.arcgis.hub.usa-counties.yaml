@@ -17,3 +17,7 @@ content:
         kind: Snapshot
         primaryKey:
           - '"FIPS"'
+    - kind: SetLicense
+      shortName: Custom License
+      name: Custom License
+      websiteUrl: https://hub.arcgis.com/datasets/fws::usa-counties/about
