@@ -11,17 +11,18 @@ content:
         # Ethereum Sepolia Testnet
         chainId: 11155111
         nodeUrl: wss://sepolia.infura.io/ws/v3/441241861f624756a18462c3af944d35
+        # Using contract deployment block to limit scanning
+        filter: |
+          address = X'f52bc7be133a4cb3799bfe6399bc576465f28153'
+          and
+          block_number >= 6432751
+        # Auto-decode binary log data
         signature: |
           event CoverageApplication(
             uint64 indexed policyId,
             address indexed holder,
             uint holderDeposit
           )
-        # Using contract deployment block to limit scanning
-        filter: |
-          address = X'f52bc7be133a4cb3799bfe6399bc576465f28153'
-          and
-          block_number >= 6432751
       read:
         kind: Parquet
       preprocess:
