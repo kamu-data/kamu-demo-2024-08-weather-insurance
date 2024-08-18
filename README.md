@@ -9,11 +9,18 @@
 </p>
 </div>
 
-## About
+# About
 
-This repository contains the code that accompanies the blog post ["Web3 Data Crash Course"]() where you can find a step-by step walkthrough.
+This repository contains the code that accompanies ["Web3 Data Crash Course"]() - go through the course to understand the theory and for a step-by step walkthrough.
 
+Tutorial in the video form:
+
+[![Unified On/Off-Chain Analytics Tutorial](https://img.youtube.com/vi/M7DyV-QUZbk/0.jpg)](https://www.youtube.com/watch?v=M7DyV-QUZbk "Unified On/Off-Chain Analytics Tutorial")
+
+
+# Instructions
 The smart contract used in the post is deployed on Ethereum Sepolia Testnet: [0xf52BC7bE133a4CB3799Bfe6399bc576465f28153](https://sepolia.etherscan.io/address/0xf52BC7bE133a4CB3799Bfe6399bc576465f28153)
+
 
 ## Building and testing
 You will need the following tools:
@@ -31,6 +38,7 @@ To build and test the contract use:
 ```sh
 foundry test
 ```
+
 
 ## Deploying and using the contract
 You will need 3 blockchain wallets:
